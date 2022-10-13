@@ -10,11 +10,94 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model user {
-    id                      String      @id @default(uuid())
-    discord_identifier      String      @unique
-    discord_username        String
-    discord_discriminator   String
-    createdAt               DateTime    @default(now())
-    updatedAt               DateTime    @updatedAt
+enum Role {
+  VISITOR
+  USER
+  ADMIN
+}
+
+model User {
+  id                    String               @id @default(uuid())
+  discord_identifier    String               @unique
+  discord_username      String
+  discord_discriminator String
+  role                  Role                 @default(VISITOR)
+  createdAt             DateTime             @default(now())
+  updatedAt             DateTime             @updatedAt
+  trainings             TrainersOfTraining[]
+  operations            Soldier[]
+}
+
+model Training {
+  id                 String               @id @default(uuid())
+  name               String
+  description        String
+  image              String
+  visible            Boolean              @default(true)
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  TrainersOfTraining TrainersOfTraining[]
+}
+
+model TrainersOfTraining {
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  training   Training @relation(fields: [trainingId], references: [id])
+  trainingId String
+  assignedAt DateTime @default(now())
+
+  @@id([userId, trainingId])
+}
+
+model Campaign {
+  id         String      @id @default(uuid())
+  name       String
+  summary    String
+  operations Operation[]
+}
+
+model Operation {
+  id         String   @id @default(uuid())
+  campaign   Campaign @relation(fields: [campaignId], references: [id])
+  campaignId String
+  name       String
+  date       DateTime
+  summary    String
+  image      String
+  groups     Group[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Group {
+  id          String    @id @default(uuid())
+  operation   Operation @relation(fields: [operationId], references: [id])
+  operationId String
+  name        String
+  radio       String?
+  vehicle     String?
+  teams       Team[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Team {
+  id        String    @id @default(uuid())
+  group     Group     @relation(fields: [groupId], references: [id])
+  groupId   String
+  name      String
+  soldiers  Soldier[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Soldier {
+  id        String   @id @default(uuid())
+  team      Team     @relation(fields: [teamId], references: [id])
+  teamId    String
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
