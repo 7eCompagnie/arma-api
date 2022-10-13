@@ -6,5 +6,8 @@
   "repository": "git@github.com:7eCompagnie/api.git",
   "author": "Clément <clement.ozor@protonmail.com>",
   "license": "GNU General Public 3.0",
-  "private": false
+  "private": false,
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
 }
