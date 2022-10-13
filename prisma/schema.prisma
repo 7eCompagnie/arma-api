@@ -9,3 +9,12 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+model user {
+    id                      String      @id @default(uuid())
+    discord_identifier      String      @unique
+    discord_username        String
+    discord_discriminator   String
+    createdAt               DateTime    @default(now())
+    updatedAt               DateTime    @updatedAt
+}
