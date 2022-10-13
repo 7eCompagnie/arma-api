@@ -1,0 +1,10 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "Our new RESTful API for the second version of our app",
+  "main": "src/index.js",
+  "repository": "git@github.com:7eCompagnie/api.git",
+  "author": "Clément <clement.ozor@protonmail.com>",
+  "license": "GNU General Public 3.0",
+  "private": false
+}
