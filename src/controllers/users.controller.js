@@ -114,3 +114,29 @@ export const updateUser = async (req, res) => {
         })
     }
 }
+
+export const deleteUser = async (req, res) => {
+    try {
+        if (req.query.type === "id") {
+            if (!await usersService.getUserById(req.params.id))
+                return res.status(404).json({
+                    message: `No user found with id ${req.params.id}.`
+                })
+
+            return res.status(200).json(await usersService.deleteUserById(req.params.id))
+        } else {
+            if (!await usersService.getUserByDiscordIdentifier(req.params.id))
+                return res.status(404).json({
+                    message: `No user found with Discord identifier ${req.params.id}.`
+                })
+
+            return res.status(200).json(await usersService.deleteUserByDiscordIdentifier(req.params.id))
+        }
+    } catch (e) {
+        console.error(e)
+
+        return res.status(500).json({
+            message: e.message,
+        })
+    }
+}

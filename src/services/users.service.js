@@ -49,3 +49,19 @@ export const updateUserByDiscordIdentifier = async (discord_identifier, data) =>
         data: data
     })
 )
+
+export const deleteUserById = async (id) => (
+    await prisma.user.delete({
+        where: {
+            id: id
+        }
+    })
+)
+
+export const deleteUserByDiscordIdentifier = async (discord_identifier) => (
+    await prisma.user.delete({
+        where: {
+            discord_identifier: discord_identifier
+        }
+    })
+)
