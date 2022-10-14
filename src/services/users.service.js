@@ -10,15 +10,21 @@ export const getUsers = async (limit, skip) => {
         })
 }
 
-export const isUserExists = async (discord_identifier) => {
-    const user = await prisma.user.findUnique({
+export const getUserById = async (id) => (
+    await prisma.user.findUnique({
+        where: {
+            id: id
+        }
+    })
+)
+
+export const getUserByDiscordIdentifier = async (discord_identifier) => (
+    await prisma.user.findUnique({
         where: {
             discord_identifier: discord_identifier
         }
     })
-
-    return user !== null
-}
+)
 
 export const createUser = async (data) => (
     await prisma.user.create({
