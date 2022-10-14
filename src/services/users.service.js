@@ -31,3 +31,21 @@ export const createUser = async (data) => (
         data: data
     })
 )
+
+export const updateUserById = async (id, data) => (
+    await prisma.user.update({
+        where: {
+            id: id
+        },
+        data: data
+    })
+)
+
+export const updateUserByDiscordIdentifier = async (discord_identifier, data) => (
+    await prisma.user.update({
+        where: {
+            discord_identifier: discord_identifier
+        },
+        data: data
+    })
+)

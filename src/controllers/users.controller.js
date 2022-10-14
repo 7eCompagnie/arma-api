@@ -1,5 +1,6 @@
 import * as usersService from "../services/users.service.js"
 import {getProps} from "../utils/props.js";
+import {updateUserByDiscordIdentifier} from "../services/users.service.js";
 
 export const getUsers = async (req, res) => {
     let limit = -1
@@ -67,22 +68,49 @@ export const createUser = async (req, res) => {
                 message: `User (${req.body.discord_identifier}) already exists.`
             })
 
-        try {
-            const data = getProps(req.body, 'discord_identifier', 'discord_username', 'discord_discriminator', 'discord_avatar')
+        const data = getProps(req.body, 'discord_identifier', 'discord_username', 'discord_discriminator', 'discord_avatar')
 
-            return res.status(201).json(await usersService.createUser(data))
-        } catch (e) {
-            console.error(e)
-
-            return res.status(500).json({
-                message: e.message,
-            })
-        }
+        return res.status(201).json(await usersService.createUser(data))
     } catch (e) {
         console.error(e)
 
         return res.status(500).json({
             message: e.message
+        })
+    }
+}
+
+export const updateUser = async (req, res) => {
+    if (Object.keys(req.body).length === 0)
+        return res.status(422).json({
+            message: "Provides at least one value to update a user."
+        })
+
+    try {
+        if (req.query.type === "id") {
+            if (!await usersService.getUserById(req.params.id))
+                return res.status(404).json({
+                    message: `No user found with id ${req.params.id}.`
+                })
+
+            const data = getProps(req.body, 'discord_username', 'discord_discriminator', 'discord_avatar')
+
+            return res.status(200).json(await usersService.updateUserById(req.params.id, data))
+        } else {
+            if (!await usersService.getUserByDiscordIdentifier(req.params.id))
+                return res.status(404).json({
+                    message: `No user found with Discord identifier ${req.params.id}.`
+                })
+
+            const data = getProps(req.body, 'discord_username', 'discord_discriminator', 'discord_avatar')
+
+            return res.status(200).json(await usersService.updateUserByDiscordIdentifier(req.params.id, data))
+        }
+    } catch (e) {
+        console.error(e)
+
+        return res.status(500).json({
+            message: e.message,
         })
     }
 }
