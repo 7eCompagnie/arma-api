@@ -1,6 +1,5 @@
 import * as usersService from "../services/users.service.js"
 import {getProps} from "../utils/props.js";
-import {updateUserByDiscordIdentifier} from "../services/users.service.js";
 
 export const getUsers = async (req, res) => {
     let limit = -1
