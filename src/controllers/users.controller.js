@@ -3,8 +3,11 @@ import {getProps} from "../utils/props.js";
 
 export const getUsers = async (req, res) => {
     try {
-        let limit = -1
-        let skip = -1
+        let pagination = {
+            limit: -1,
+            skip: -1
+        }
+        let sort = []
 
         if ((req.query.limit != null && req.query.skip == null) ||
             (req.query.limit == null && req.query.skip != null))
@@ -12,11 +15,20 @@ export const getUsers = async (req, res) => {
                 message: "Please fill in the two fields \"skip\" and \"limit\"."
             })
         else if (req.query.limit != null && req.query.skip != null) {
-            limit = parseInt(req.query.limit)
-            skip = parseInt(req.query.skip)
+            pagination.limit = parseInt(req.query.limit)
+            pagination.skip = parseInt(req.query.skip)
         }
 
-        return res.status(200).json(await usersService.getUsers(limit, skip))
+        if (req.query.sortBy != null) {
+            let obj = {}
+
+            obj[req.query.sortBy] = req.query.orderBy || 'asc'
+            sort.push(obj)
+        }
+
+        const filters = getProps(req.query, "discord_username", "role")
+
+        return res.status(200).json(await usersService.getUsers(pagination, filters, sort))
     } catch (e) {
         console.error(e)
 

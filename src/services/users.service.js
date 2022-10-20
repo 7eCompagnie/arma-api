@@ -1,12 +1,31 @@
 import prisma from "../config/prisma.js";
 
-export const getUsers = async (limit, skip) => {
-    if (limit === -1 && skip === -1)
-        return prisma.user.findMany()
-    else
+export const getUsers = async (pagination, filters, sort) => {
+    if (pagination.limit === -1 && pagination.skip === -1) {
         return prisma.user.findMany({
-            skip: skip,
-            take: limit
+            where: {
+                discord_username: {
+                    contains: filters.discord_username
+                },
+                role: {
+                    equals: filters.role
+                }
+            },
+            orderBy: sort
+        })
+    } else
+        return prisma.user.findMany({
+            skip: pagination.skip,
+            take: pagination.limit,
+            where: {
+                discord_username: {
+                    contains: filters.discord_username
+                },
+                role: {
+                    equals: filters.role
+                },
+            },
+            orderBy: sort
         })
 }
 
