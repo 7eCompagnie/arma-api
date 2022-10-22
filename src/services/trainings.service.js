@@ -56,7 +56,7 @@ export const updateTraining = async (id, data) => (
 )
 
 export const deleteTraining = async (id) => {
-    await prisma.trainersOfTraining.deleteMany({
+    await prisma.trainers.deleteMany({
         where: {
             training: {
                 id: id

@@ -25,7 +25,7 @@ model User {
   role                  Role                 @default(VISITOR)
   createdAt             DateTime             @default(now())
   updatedAt             DateTime             @updatedAt
-  trainings             TrainersOfTraining[]
+  trainings             Trainers[]
   operations            Soldier[]
 }
 
@@ -37,10 +37,10 @@ model Training {
   visible            Boolean              @default(true)
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
-  TrainersOfTraining TrainersOfTraining[]
+  trainers Trainers[]
 }
 
-model TrainersOfTraining {
+model Trainers {
   user       User     @relation(fields: [userId], references: [id])
   userId     String     @db.VarChar(255)
   training   Training @relation(fields: [trainingId], references: [id])
