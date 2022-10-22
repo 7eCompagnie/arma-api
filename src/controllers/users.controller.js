@@ -93,11 +93,6 @@ export const createUser = async (req, res) => {
 
 export const updateUser = async (req, res) => {
     try {
-        if (Object.keys(req.body).length === 0)
-            return res.status(422).json({
-                message: "Provides at least one value to update a user."
-            })
-
         if (req.query.type === "id") {
             if (!await usersService.getUserById(req.params.id))
                 return res.status(404).json({
