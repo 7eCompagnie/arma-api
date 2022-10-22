@@ -1,7 +1,6 @@
 import prisma from "../config/prisma.js";
 
 export const getTrainings = async (pagination, filters, sort) => {
-    console.log(sort)
     if (pagination.limit === -1 && pagination.skip === -1) {
         return prisma.training.findMany({
             where: {
