@@ -19,9 +19,9 @@ enum Role {
 model User {
   id                    String               @id @default(uuid())
   discord_identifier    String               @unique
-  discord_username      String
-  discord_discriminator String
-  discord_avatar        String
+  discord_username      String               @db.VarChar(255)
+  discord_discriminator String               @db.VarChar(255)
+  discord_avatar        String               @db.VarChar(255)
   role                  Role                 @default(VISITOR)
   createdAt             DateTime             @default(now())
   updatedAt             DateTime             @updatedAt
@@ -31,9 +31,9 @@ model User {
 
 model Training {
   id                 String               @id @default(uuid())
-  name               String
-  description        String
-  image              String
+  name               String               @db.VarChar(255)
+  description        String               @db.Text
+  image              String               @db.VarChar(255)
   visible            Boolean              @default(true)
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
@@ -42,9 +42,9 @@ model Training {
 
 model TrainersOfTraining {
   user       User     @relation(fields: [userId], references: [id])
-  userId     String
+  userId     String     @db.VarChar(255)
   training   Training @relation(fields: [trainingId], references: [id])
-  trainingId String
+  trainingId String     @db.VarChar(255)
   assignedAt DateTime @default(now())
 
   @@id([userId, trainingId])
@@ -52,19 +52,19 @@ model TrainersOfTraining {
 
 model Campaign {
   id         String      @id @default(uuid())
-  name       String
-  summary    String
+  name       String @db.VarChar(255)
+  summary    String    @db.Text
   operations Operation[]
 }
 
 model Operation {
   id         String   @id @default(uuid())
   campaign   Campaign @relation(fields: [campaignId], references: [id])
-  campaignId String
-  name       String
+  campaignId String     @db.VarChar(255)
+  name       String     @db.VarChar(255)
   date       DateTime
-  summary    String
-  image      String
+  summary    String     @db.Text
+  image      String     @db.VarChar(255)
   groups     Group[]
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
@@ -73,10 +73,10 @@ model Operation {
 model Group {
   id          String    @id @default(uuid())
   operation   Operation @relation(fields: [operationId], references: [id])
-  operationId String
-  name        String
-  radio       String?
-  vehicle     String?
+  operationId String    @db.VarChar(255)
+  name        String    @db.VarChar(255)
+  radio       String?   @db.VarChar(255)
+  vehicle     String?   @db.VarChar(255)
   teams       Team[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
