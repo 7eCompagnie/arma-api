@@ -13,6 +13,6 @@ app.use('/uploads', express.static('uploads'));
 
 app.use('/users', usersRoute)
 app.use('/trainings', trainingsRoute)
-app.use('/', trainersRoute)
+app.use('/trainings', trainersRoute)
 
 app.listen(PORT, () => console.log(`[API] => Running on port ${PORT}`))

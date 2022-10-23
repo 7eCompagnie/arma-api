@@ -3,9 +3,9 @@ import {createTrainer, deleteTrainer, getTrainer, getTrainers} from "../controll
 
 const router = express.Router()
 
-router.get('/trainings/:trainingId/trainers', getTrainers)
-router.get('/trainings/:trainingId/trainers/:userId', getTrainer)
-router.post('/trainings/:trainingId/trainers', createTrainer)
-router.delete('/trainings/:trainingId/trainers/:userId', deleteTrainer)
+router.get('/:trainingId/trainers', getTrainers)
+router.get('/:trainingId/trainers/:userId', getTrainer)
+router.post('/:trainingId/trainers', createTrainer)
+router.delete('/:trainingId/trainers/:userId', deleteTrainer)
 
 export default router
