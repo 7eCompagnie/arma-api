@@ -167,15 +167,20 @@ export const updateCampaign = async (req, res) => {
 
 export const deleteCampaign = async (req, res) => {
     try {
+        let campaign = {}
         if (req.query.type === "slug") {
-            if (!await campaignsService.getCampaignBySlug(req.params.id))
+            campaign = await campaignsService.getCampaignBySlug(req.params.id)
+
+            if (!campaign)
                 return res.status(404).json({
                     message: `No campaign found with slug ${req.params.id}.`
                 })
 
             return res.status(200).json(await campaignsService.deleteCampaignBySlug(req.params.id))
         } else {
-            if (!await campaignsService.getCampaign(req.params.id))
+            campaign = await campaignsService.getCampaign(req.params.id)
+
+            if (!campaign)
                 return res.status(404).json({
                     message: `No campaign found with id ${req.params.id}.`
                 })

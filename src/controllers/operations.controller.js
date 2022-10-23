@@ -179,18 +179,28 @@ export const updateOperation = async (req, res) => {
 
 export const deleteOperation = async (req, res) => {
     try {
+        let operation = {}
+
         if (req.query.type === "slug") {
-            if (!await operationsService.getOperationBySlug(req.params.operationId))
+            operation = await operationsService.getOperationBySlug(req.params.operationId)
+
+            if (!operation)
                 return res.status(404).json({
                     message: `No operation found with slug ${req.params.operationId}.`
                 })
 
+            deleteFile(operation.image)
+
             return res.status(200).json(await operationsService.deleteOperationBySlug(req.params.operationId))
         } else {
-            if (!await operationsService.getOperation(req.params.operationId))
+            operation = await operationsService.getOperation(req.params.operationId)
+
+            if (!operation)
                 return res.status(404).json({
                     message: `No operation found with id ${req.params.operationId}.`
                 })
+
+            deleteFile(operation.image)
 
             return res.status(200).json(await operationsService.deleteOperation(req.params.operationId))
         }
