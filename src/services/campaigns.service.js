@@ -64,7 +64,11 @@ export const updateCampaignBySlug = async (slug, data) => (
 )
 
 export const deleteCampaign = async (id) => {
-    // TODO: Delete operations
+    await prisma.operation.deleteMany({
+        where: {
+            campaignId: id
+        }
+    })
 
     return prisma.campaign.delete({
         where: {
