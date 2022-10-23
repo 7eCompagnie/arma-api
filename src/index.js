@@ -5,7 +5,7 @@ import trainingsRoute from "./routes/trainings.route.js";
 import trainersRoute from "./routes/trainers.route.js";
 import settingsRoute from "./routes/settings.route.js";
 import campaignsRoute from "./routes/campaigns.route.js";
-// import operationsRoute from "./routes/operations.route.js";
+import operationsRoute from "./routes/operations.route.js";
 
 const app = express()
 const PORT = process.env.SERVER_PORT || 3000
@@ -19,6 +19,6 @@ app.use('/trainings', trainingsRoute)
 app.use('/trainings', trainersRoute)
 app.use('/settings', settingsRoute)
 app.use('/campaigns', campaignsRoute)
-// app.use('/operations', operationsRoute)
+app.use('/campaigns', operationsRoute)
 
 app.listen(PORT, () => console.log(`[API] => Running on port ${PORT}`))

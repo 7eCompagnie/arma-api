@@ -1,9 +1,10 @@
 import prisma from "../config/prisma.js";
 
-export const getCampaigns = async (pagination, filters, sort) => {
+export const getOperations = async (campaignId, pagination, filters, sort) => {
     if (pagination.limit === -1 && pagination.skip === -1) {
-        return prisma.campaign.findMany({
+        return prisma.operation.findMany({
             where: {
+                campaignId: campaignId,
                 name: {
                     contains: filters.name
                 }
@@ -11,10 +12,11 @@ export const getCampaigns = async (pagination, filters, sort) => {
             orderBy: sort
         })
     } else
-        return prisma.campaign.findMany({
+        return prisma.operation.findMany({
             skip: pagination.skip,
             take: pagination.limit,
             where: {
+                campaignId: campaignId,
                 name: {
                     contains: filters.name
                 }
@@ -23,30 +25,30 @@ export const getCampaigns = async (pagination, filters, sort) => {
         })
 }
 
-export const getCampaign = async (id) => (
-    await prisma.campaign.findUnique({
+export const getOperation = async (id) => (
+    await prisma.operation.findUnique({
         where: {
             id: id
         }
     })
 )
 
-export const getCampaignBySlug = async (slug) => (
-    await prisma.campaign.findUnique({
+export const getOperationBySlug = async (slug) => (
+    await prisma.operation.findUnique({
         where: {
             slug: slug
         }
     })
 )
 
-export const createCampaign = async (data) => (
-    await prisma.campaign.create({
+export const createOperation = async (data) => (
+    await prisma.operation.create({
         data: data
     })
 )
 
-export const updateCampaign = async (id, data) => (
-    await prisma.campaign.update({
+export const updateOperation = async (id, data) => (
+    await prisma.operation.update({
         where: {
             id: id
         },
@@ -54,8 +56,8 @@ export const updateCampaign = async (id, data) => (
     })
 )
 
-export const updateCampaignBySlug = async (slug, data) => (
-    await prisma.campaign.update({
+export const updateOperationBySlug = async (slug, data) => (
+    await prisma.operation.update({
         where: {
             slug: slug
         },
@@ -63,30 +65,32 @@ export const updateCampaignBySlug = async (slug, data) => (
     })
 )
 
-export const deleteCampaign = async (id) => {
-    await prisma.operation.deleteMany({
+export const deleteOperation = async (id) => {
+    await prisma.group.deleteMany({
         where: {
-            campaignId: id
+            operation: {
+                id: id
+            }
         }
     })
 
-    return prisma.campaign.delete({
+    return prisma.operation.delete({
         where: {
             id: id
         }
     });
 }
 
-export const deleteCampaignBySlug = async (slug) => {
-    await prisma.operation.deleteMany({
+export const deleteOperationBySlug = async (slug) => {
+    await prisma.group.deleteMany({
         where: {
-            campaign: {
+            operation: {
                 slug: slug
             }
         }
     })
 
-    return prisma.campaign.delete({
+    return prisma.operation.delete({
         where: {
             slug: slug
         }
