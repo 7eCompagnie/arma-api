@@ -17,38 +17,38 @@ enum Role {
 }
 
 model User {
-  id                    String               @id @default(uuid())
-  discordIdentifier    String               @unique
-  discordUsername      String               @db.VarChar(255)
-  discordDiscriminator String               @db.VarChar(255)
-  discordAvatar        String               @db.VarChar(255)
-  role                  Role                 @default(VISITOR)
-  createdAt             DateTime             @default(now())
-  updatedAt             DateTime             @updatedAt
-  trainings             Trainer[]
-  operations            Soldier[]
+  id                   String    @id @default(uuid())
+  discordIdentifier    String    @unique
+  discordUsername      String    @db.VarChar(255)
+  discordDiscriminator String    @db.VarChar(255)
+  discordAvatar        String    @db.VarChar(255)
+  role                 Role      @default(VISITOR)
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  trainings            Trainer[]
+  operations           Soldier[]
 
   @@map("users")
 }
 
 model Training {
-  id                 String               @id @default(uuid())
-  name               String               @db.VarChar(255)
-  description        String               @db.Text
-  image              String               @db.VarChar(255)
-  visible            Boolean              @default(true)
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @updatedAt
-  trainers Trainer[]
+  id          String    @id @default(uuid())
+  name        String    @db.VarChar(255)
+  description String    @db.Text
+  image       String    @db.VarChar(255)
+  visible     Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  trainers    Trainer[]
 
   @@map("trainings")
 }
 
 model Trainer {
   user       User     @relation(fields: [userId], references: [id])
-  userId     String     @db.VarChar(255)
+  userId     String   @db.VarChar(255)
   training   Training @relation(fields: [trainingId], references: [id])
-  trainingId String     @db.VarChar(255)
+  trainingId String   @db.VarChar(255)
   assignedAt DateTime @default(now())
 
   @@id([userId, trainingId])
@@ -57,8 +57,8 @@ model Trainer {
 
 model Campaign {
   id         String      @id @default(uuid())
-  name       String @db.VarChar(255)
-  summary    String    @db.Text
+  name       String      @db.VarChar(255)
+  summary    String      @db.Text
   operations Operation[]
 
   @@map("campaigns")
@@ -67,11 +67,11 @@ model Campaign {
 model Operation {
   id         String   @id @default(uuid())
   campaign   Campaign @relation(fields: [campaignId], references: [id])
-  campaignId String     @db.VarChar(255)
-  name       String     @db.VarChar(255)
+  campaignId String   @db.VarChar(255)
+  name       String   @db.VarChar(255)
   date       DateTime
-  summary    String     @db.Text
-  image      String     @db.VarChar(255)
+  summary    String   @db.Text
+  image      String   @db.VarChar(255)
   groups     Group[]
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
@@ -119,8 +119,10 @@ model Soldier {
 }
 
 model Setting {
-    name    String  @unique
-    value   String
+  name      String   @unique
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-    @@map("settings")
+  @@map("settings")
 }
