@@ -56,9 +56,12 @@ model Trainer {
 }
 
 model Campaign {
-  id         String      @id @default(uuid())
-  name       String      @db.VarChar(255)
-  summary    String      @db.Text
+  id      String @id @default(uuid())
+  name    String @db.VarChar(255)
+  summary String @db.Text
+  image   String @db.VarChar(255)
+  slug    String @unique @db.VarChar(255)
+
   operations Operation[]
 
   @@map("campaigns")
