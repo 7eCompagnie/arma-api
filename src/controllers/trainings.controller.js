@@ -28,12 +28,12 @@ export const getTrainings = async (req, res) => {
         }
 
         const filters = getProps(req.query, "name", "visible")
-        if (req.query.trainer_username != null)
+        if (req.query.trainerUsername != null)
             filters.user = {
                 some: {
                     user: {
-                        discord_username: {
-                            contains: req.query.trainer_username
+                        discordUsername: {
+                            contains: req.query.trainerUsername
                         }
                     }
                 }

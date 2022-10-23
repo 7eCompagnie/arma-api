@@ -2,6 +2,7 @@ import express from "express"
 import "dotenv/config"
 import usersRoute from "./routes/users.route.js";
 import trainingsRoute from "./routes/trainings.route.js";
+import trainersRoute from "./routes/trainers.route.js";
 
 const app = express()
 const PORT = process.env.SERVER_PORT || 3000
@@ -12,5 +13,6 @@ app.use('/uploads', express.static('uploads'));
 
 app.use('/users', usersRoute)
 app.use('/trainings', trainingsRoute)
+app.use('/', trainersRoute)
 
 app.listen(PORT, () => console.log(`[API] => Running on port ${PORT}`))

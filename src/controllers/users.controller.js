@@ -26,7 +26,7 @@ export const getUsers = async (req, res) => {
             sort.push(obj)
         }
 
-        const filters = getProps(req.query, "discord_username", "role")
+        const filters = getProps(req.query, "discordUsername", "role")
 
         return res.status(200).json(await usersService.getUsers(pagination, filters, sort))
     } catch (e) {
@@ -66,20 +66,20 @@ export const getUser = async (req, res) => {
 
 export const createUser = async (req, res) => {
     try {
-        if (!req.body.discord_identifier ||
-            !req.body.discord_username ||
-            !req.body.discord_discriminator ||
-            !req.body.discord_avatar)
+        if (!req.body.discordIdentifier ||
+            !req.body.discordUsername ||
+            !req.body.discordDiscriminator ||
+            !req.body.discordAvatar)
             return res.status(422).json({
                 message: "Mandatory fields are missing."
             })
 
-        if (await usersService.getUserByDiscordIdentifier(req.body.discord_identifier))
+        if (await usersService.getUserByDiscordIdentifier(req.body.discordIdentifier))
             return res.status(409).json({
-                message: `User (${req.body.discord_identifier}) already exists.`
+                message: `User (${req.body.discordIdentifier}) already exists.`
             })
 
-        const data = getProps(req.body, 'discord_identifier', 'discord_username', 'discord_discriminator', 'discord_avatar')
+        const data = getProps(req.body, 'discordIdentifier', 'discordUsername', 'discordDiscriminator', 'discordAvatar')
 
         return res.status(201).json(await usersService.createUser(data))
     } catch (e) {
@@ -99,7 +99,7 @@ export const updateUser = async (req, res) => {
                     message: `No user found with id ${req.params.id}.`
                 })
 
-            const data = getProps(req.body, 'discord_username', 'discord_discriminator', 'discord_avatar')
+            const data = getProps(req.body, 'discordUsername', 'discordDiscriminator', 'discordAvatar')
 
             return res.status(200).json(await usersService.updateUserById(req.params.id, data))
         } else {
@@ -108,7 +108,7 @@ export const updateUser = async (req, res) => {
                     message: `No user found with Discord identifier ${req.params.id}.`
                 })
 
-            const data = getProps(req.body, 'discord_username', 'discord_discriminator', 'discord_avatar')
+            const data = getProps(req.body, 'discordUsername', 'discordDiscriminator', 'discordAvatar')
 
             return res.status(200).json(await usersService.updateUserByDiscordIdentifier(req.params.id, data))
         }

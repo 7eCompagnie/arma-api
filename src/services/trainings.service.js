@@ -10,7 +10,7 @@ export const getTrainings = async (pagination, filters, sort) => {
                 visible: {
                     equals: filters.visible
                 },
-                TrainersOfTraining: filters.user
+                trainers: filters.user
             },
             orderBy: sort
         })
@@ -25,7 +25,7 @@ export const getTrainings = async (pagination, filters, sort) => {
                 visible: {
                     equals: filters.visible
                 },
-                TrainersOfTraining: filters.user
+                trainers: filters.user
             },
             orderBy: sort
         })
@@ -55,7 +55,7 @@ export const updateTraining = async (id, data) => (
 )
 
 export const deleteTraining = async (id) => {
-    await prisma.trainers.deleteMany({
+    await prisma.trainer.deleteMany({
         where: {
             training: {
                 id: id

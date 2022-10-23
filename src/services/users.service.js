@@ -4,8 +4,8 @@ export const getUsers = async (pagination, filters, sort) => {
     if (pagination.limit === -1 && pagination.skip === -1) {
         return prisma.user.findMany({
             where: {
-                discord_username: {
-                    contains: filters.discord_username
+                discordUsername: {
+                    contains: filters.discordUsername
                 },
                 role: {
                     equals: filters.role
@@ -18,8 +18,8 @@ export const getUsers = async (pagination, filters, sort) => {
             skip: pagination.skip,
             take: pagination.limit,
             where: {
-                discord_username: {
-                    contains: filters.discord_username
+                discordUsername: {
+                    contains: filters.discordUsername
                 },
                 role: {
                     equals: filters.role
@@ -37,10 +37,10 @@ export const getUserById = async (id) => (
     })
 )
 
-export const getUserByDiscordIdentifier = async (discord_identifier) => (
+export const getUserByDiscordIdentifier = async (discordIdentifier) => (
     await prisma.user.findUnique({
         where: {
-            discord_identifier: discord_identifier
+            discordIdentifier: discordIdentifier
         }
     })
 )
@@ -60,10 +60,10 @@ export const updateUserById = async (id, data) => (
     })
 )
 
-export const updateUserByDiscordIdentifier = async (discord_identifier, data) => (
+export const updateUserByDiscordIdentifier = async (discordIdentifier, data) => (
     await prisma.user.update({
         where: {
-            discord_identifier: discord_identifier
+            discordIdentifier: discordIdentifier
         },
         data: data
     })
@@ -77,10 +77,10 @@ export const deleteUserById = async (id) => (
     })
 )
 
-export const deleteUserByDiscordIdentifier = async (discord_identifier) => (
+export const deleteUserByDiscordIdentifier = async (discordIdentifier) => (
     await prisma.user.delete({
         where: {
-            discord_identifier: discord_identifier
+            discordIdentifier: discordIdentifier
         }
     })
 )
