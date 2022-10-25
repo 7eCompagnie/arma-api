@@ -260,3 +260,5 @@ fabric.properties
 !.yarn/plugins
 !.yarn/sdks
 !.yarn/versions
+
+uploads

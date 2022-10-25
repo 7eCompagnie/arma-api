@@ -1,0 +1,31 @@
+import express from 'express'
+import {deleteOperation, getOperation, getOperations, updateOperation} from "../controllers/operations.controller.js";
+import multer from "multer";
+import crypto from "crypto";
+import path from "path";
+import {getGroupsOfOperation, createGroup} from "../controllers/groups.controller.js";
+
+const router = express.Router()
+
+const storage = multer.diskStorage({
+    destination: 'uploads/operations',
+    filename: function (req, file, cb) {
+        crypto.pseudoRandomBytes(16, function (err, raw) {
+            if (err) return cb(err)
+
+            cb(null, raw.toString('hex') + path.extname(file.originalname))
+        })
+    }
+})
+
+const uploadOperation = multer({storage: storage});
+
+router.get('/', getOperations)
+router.get('/:id', getOperation)
+router.post('/:id', uploadOperation.single("image"), updateOperation)
+router.delete('/:id', deleteOperation)
+
+router.get('/:id/groups/', getGroupsOfOperation)
+router.post('/:id/groups/', createGroup)
+
+export default router
