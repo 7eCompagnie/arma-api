@@ -1,9 +1,8 @@
 import prisma from "../config/prisma.js";
-import {deleteTeam, getTeamsOfGroup} from "./teams.service.js";
 
-export const getGroups = async (pagination, filters, sort) => {
+export const getTeams = async (pagination, filters, sort) => {
     if (pagination.limit === -1 && pagination.skip === -1) {
-        return prisma.group.findMany({
+        return prisma.team.findMany({
             where: {
                 name: {
                     contains: filters.name
@@ -12,7 +11,7 @@ export const getGroups = async (pagination, filters, sort) => {
             orderBy: sort
         })
     } else
-        return prisma.group.findMany({
+        return prisma.team.findMany({
             skip: pagination.skip,
             take: pagination.limit,
             where: {
@@ -24,10 +23,10 @@ export const getGroups = async (pagination, filters, sort) => {
         })
 }
 
-export const getGroupsOfOperation = async (operationId) => {
-    return prisma.group.findMany({
+export const getTeamsOfGroup = async (groupId) => {
+    return prisma.team.findMany({
         where: {
-            operationId: operationId
+            groupId: groupId
         },
         orderBy: [
             {
@@ -37,22 +36,22 @@ export const getGroupsOfOperation = async (operationId) => {
     })
 }
 
-export const getGroup = async (id) => (
-    await prisma.group.findUnique({
+export const getTeam = async (id) => (
+    await prisma.team.findUnique({
         where: {
             id: id
         }
     })
 )
 
-export const createGroup = async (data) => (
-    await prisma.group.create({
+export const createTeam = async (data) => (
+    await prisma.team.create({
         data: data
     })
 )
 
-export const updateGroup = async (id, data) => (
-    await prisma.group.update({
+export const updateTeam = async (id, data) => (
+    await prisma.team.update({
         where: {
             id: id
         },
@@ -60,13 +59,13 @@ export const updateGroup = async (id, data) => (
     })
 )
 
-export const deleteGroup = async (id) => {
-    let teams = await getTeamsOfGroup(id)
+export const deleteTeam = async (id) => {
+    // let teams = await getTeamsOfTeam(id)
+    //
+    // for (let team in teams)
+    //     await deleteTeam(teams[team].id)
 
-    for (let team in teams)
-        await deleteTeam(teams[team].id)
-
-    return prisma.group.delete({
+    return prisma.team.delete({
         where: {
             id: id
         }

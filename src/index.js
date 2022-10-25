@@ -7,6 +7,7 @@ import settingsRoute from "./routes/settings.route.js";
 import campaignsRoute from "./routes/campaigns.route.js";
 import operationsRoute from "./routes/operations.route.js";
 import groupsRoute from "./routes/groups.route.js";
+import teamsRoute from "./routes/teams.route.js";
 
 const app = express()
 const PORT = process.env.SERVER_PORT || 3000
@@ -22,5 +23,6 @@ app.use('/settings', settingsRoute)
 app.use('/campaigns', campaignsRoute)
 app.use('/operations', operationsRoute)
 app.use('/groups', groupsRoute)
+app.use('/teams', teamsRoute)
 
 app.listen(PORT, () => console.log(`[API] => Running on port ${PORT}`))

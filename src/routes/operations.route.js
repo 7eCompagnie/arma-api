@@ -28,13 +28,4 @@ router.delete('/:id', deleteOperation)
 router.get('/:id/groups/', getGroupsOfOperation)
 router.post('/:id/groups/', createGroup)
 
-// TODO: Reworks routes:
-/*
-* /campaign/:campaignId/operations/ [GET]       -> get operations of specific campaign
-* /campaign/:campaignId/operations/ [POST]      -> create operation in operation
-* /operations/:id [GET]                         -> get specific operation
-* /operations/:id [PATCH]                       -> update operation
-* /operations/:id [DELETE]                      -> delete operation
-* */
-
 export default router
