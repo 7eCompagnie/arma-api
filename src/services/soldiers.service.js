@@ -1,9 +1,8 @@
 import prisma from "../config/prisma.js";
-import {deleteSoldier, getSoldiersOfTeam} from "./soldiers.service.js";
 
-export const getTeams = async (pagination, filters, sort) => {
+export const getSoldiers = async (pagination, filters, sort) => {
     if (pagination.limit === -1 && pagination.skip === -1) {
-        return prisma.team.findMany({
+        return prisma.soldier.findMany({
             where: {
                 name: {
                     contains: filters.name
@@ -12,7 +11,7 @@ export const getTeams = async (pagination, filters, sort) => {
             orderBy: sort
         })
     } else
-        return prisma.team.findMany({
+        return prisma.soldier.findMany({
             skip: pagination.skip,
             take: pagination.limit,
             where: {
@@ -24,10 +23,10 @@ export const getTeams = async (pagination, filters, sort) => {
         })
 }
 
-export const getTeamsOfGroup = async (groupId) => {
-    return prisma.team.findMany({
+export const getSoldiersOfTeam = async (teamId) => {
+    return prisma.soldier.findMany({
         where: {
-            groupId: groupId
+            teamId: teamId
         },
         orderBy: [
             {
@@ -37,22 +36,22 @@ export const getTeamsOfGroup = async (groupId) => {
     })
 }
 
-export const getTeam = async (id) => (
-    await prisma.team.findUnique({
+export const getSoldier = async (id) => (
+    await prisma.soldier.findUnique({
         where: {
             id: id
         }
     })
 )
 
-export const createTeam = async (data) => (
-    await prisma.team.create({
+export const createSoldier = async (data) => (
+    await prisma.soldier.create({
         data: data
     })
 )
 
-export const updateTeam = async (id, data) => (
-    await prisma.team.update({
+export const updateSoldier = async (id, data) => (
+    await prisma.soldier.update({
         where: {
             id: id
         },
@@ -60,13 +59,8 @@ export const updateTeam = async (id, data) => (
     })
 )
 
-export const deleteTeam = async (id) => {
-    let soldiers = await getSoldiersOfTeam(id)
-
-    for (let soldier in soldiers)
-        await deleteSoldier(soldiers[soldier].id)
-
-    return prisma.team.delete({
+export const deleteSoldier = async (id) => {
+    return prisma.soldier.delete({
         where: {
             id: id
         }
