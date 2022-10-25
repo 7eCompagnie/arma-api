@@ -3,6 +3,7 @@ import {getTrainings, createTraining, getTraining, updateTraining, deleteTrainin
 import crypto from "crypto";
 import path from "path";
 import multer from "multer";
+import {isSigned} from "../middlewares/auth.middleware.js";
 const router = express.Router()
 
 const storage = multer.diskStorage({
@@ -19,10 +20,10 @@ const storage = multer.diskStorage({
 const uploadTrainings = multer({storage: storage});
 
 
-router.get('/', getTrainings)
-router.get('/:id', getTraining)
-router.post('/', uploadTrainings.single("image"), createTraining)
-router.post('/:id', uploadTrainings.single("image"), updateTraining)
-router.delete('/:id', deleteTraining)
+router.get('/', isSigned, getTrainings)
+router.get('/:id', isSigned, getTraining)
+router.post('/', isSigned, uploadTrainings.single("image"), createTraining)
+router.post('/:id', isSigned, uploadTrainings.single("image"), updateTraining)
+router.delete('/:id', isSigned, deleteTraining)
 
 export default router

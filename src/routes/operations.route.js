@@ -4,6 +4,7 @@ import multer from "multer";
 import crypto from "crypto";
 import path from "path";
 import {getGroupsOfOperation, createGroup} from "../controllers/groups.controller.js";
+import {isSigned} from "../middlewares/auth.middleware.js";
 
 const router = express.Router()
 
@@ -20,12 +21,12 @@ const storage = multer.diskStorage({
 
 const uploadOperation = multer({storage: storage});
 
-router.get('/', getOperations)
-router.get('/:id', getOperation)
-router.post('/:id', uploadOperation.single("image"), updateOperation)
-router.delete('/:id', deleteOperation)
+router.get('/', isSigned, getOperations)
+router.get('/:id', isSigned, getOperation)
+router.post('/:id', isSigned, uploadOperation.single("image"), updateOperation)
+router.delete('/:id', isSigned, deleteOperation)
 
-router.get('/:id/groups/', getGroupsOfOperation)
-router.post('/:id/groups/', createGroup)
+router.get('/:id/groups/', isSigned, getGroupsOfOperation)
+router.post('/:id/groups/', isSigned, createGroup)
 
 export default router

@@ -1,15 +1,16 @@
 import express from 'express'
 import {deleteTeam, getTeam, getTeams, updateTeam} from "../controllers/teams.controller.js";
 import {createSoldier, getSoldiersOfTeam} from "../controllers/soldiers.controller.js";
+import {isSigned} from "../middlewares/auth.middleware.js";
 
 const router = express.Router()
 
-router.get('/', getTeams)
-router.get('/:id', getTeam)
-router.patch('/:id', updateTeam)
-router.delete('/:id', deleteTeam)
+router.get('/', isSigned, getTeams)
+router.get('/:id', isSigned, getTeam)
+router.patch('/:id', isSigned, updateTeam)
+router.delete('/:id', isSigned, deleteTeam)
 
-router.get('/:id/soldiers/', getSoldiersOfTeam)
-router.post('/:id/soldiers/', createSoldier)
+router.get('/:id/soldiers/', isSigned, getSoldiersOfTeam)
+router.post('/:id/soldiers/', isSigned, createSoldier)
 
 export default router

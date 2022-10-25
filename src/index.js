@@ -26,6 +26,5 @@ app.use('/operations', operationsRoute)
 app.use('/groups', groupsRoute)
 app.use('/teams', teamsRoute)
 app.use('/soldiers', soldiersRoute)
-app.use('/', (req, res) => res.sendFile("index.html", { root: './src' }))
 
 app.listen(PORT, () => console.log(`[API] => Running on port ${PORT}`))

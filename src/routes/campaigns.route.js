@@ -1,9 +1,16 @@
 import express from 'express'
-import {createCampaign, deleteCampaign, getCampaign, getCampaigns, updateCampaign} from "../controllers/campaigns.controller.js";
+import {
+    createCampaign,
+    deleteCampaign,
+    getCampaign,
+    getCampaigns,
+    updateCampaign
+} from "../controllers/campaigns.controller.js";
 import multer from "multer";
 import crypto from "crypto";
 import path from "path";
 import {createOperation, getOperationsOfCampaign} from "../controllers/operations.controller.js";
+import {isSigned} from "../middlewares/auth.middleware.js";
 
 const router = express.Router()
 
@@ -33,13 +40,13 @@ const operationStorage = multer.diskStorage({
 
 const uploadOperation = multer({storage: operationStorage});
 
-router.get('/', getCampaigns)
-router.get('/:id', getCampaign)
-router.post('/', uploadCampaign.single("image"), createCampaign)
-router.post('/:id', uploadCampaign.single("image"), updateCampaign)
-router.delete('/:id', deleteCampaign)
+router.get('/', isSigned, getCampaigns)
+router.get('/:id', isSigned, getCampaign)
+router.post('/', isSigned, uploadCampaign.single("image"), createCampaign)
+router.post('/:id', isSigned, uploadCampaign.single("image"), updateCampaign)
+router.delete('/:id', isSigned, deleteCampaign)
 
-router.get('/:id/operations/', getOperationsOfCampaign)
-router.post('/:id/operations', uploadOperation.single("image"), createOperation)
+router.get('/:id/operations/', isSigned, getOperationsOfCampaign)
+router.post('/:id/operations', isSigned, uploadOperation.single("image"), createOperation)
 
 export default router
