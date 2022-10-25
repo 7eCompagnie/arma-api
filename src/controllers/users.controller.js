@@ -1,5 +1,9 @@
 import * as usersService from "../services/users.service.js"
 import {getProps} from "../utils/props.js";
+import 'dotenv/config'
+import axios from "axios";
+import {getUserByDiscordIdentifier} from "../services/users.service.js";
+import jwt from "jsonwebtoken";
 
 export const getUsers = async (req, res) => {
     try {
@@ -145,4 +149,78 @@ export const deleteUser = async (req, res) => {
             message: e.message,
         })
     }
+}
+
+export const signIn = async (req, res) => {
+    if (!req.body.code)
+        return res.status(422).json({
+            message: "Mandatory fields are missing."
+        })
+
+    res.status(200).json({
+        token: await getDiscordToken(req.body.code)
+    });
+}
+
+const getDiscordToken = async (code) => {
+    const body = new URLSearchParams();
+
+    body.append('client_id', process.env.DISCORD_CLIENT_ID);
+    body.append('client_secret', process.env.DISCORD_CLIENT_SECRET);
+    body.append('grant_type', 'authorization_code');
+    body.append('code', code);
+    body.append('redirect_uri', process.env.DISCORD_REDIRECT_URI);
+
+    let token
+
+    await axios.post('https://discordapp.com/api/oauth2/token', body)
+        .then(async (response) => {
+            const data = {
+                token: response.data.access_token,
+                refreshToken: response.data.refresh_token,
+                tokenType: response.data.token_type,
+                expiresIn: response.data.expires_in
+            }
+
+            token = await getDiscordUser(data)
+        })
+
+    return token
+}
+
+const getDiscordUser = async (data) => {
+    let token
+
+    await axios.get('https://discordapp.com/api/users/@me', {
+        headers: {
+            Authorization: `Bearer ${data.token}`
+        }
+    })
+        .then(async (response) => {
+            const discordUser = response.data;
+            let user
+
+            if (!await getUserByDiscordIdentifier(discordUser.id)) {
+                user = await usersService.createUser({
+                    discordIdentifier: discordUser.id,
+                    discordUsername: discordUser.username,
+                    discordDiscriminator: discordUser.discriminator,
+                    discordAvatar: discordUser.avatar
+                })
+            } else {
+                user = await usersService.updateUserByDiscordIdentifier(discordUser.id, {
+                    discordIdentifier: discordUser.id,
+                    discordUsername: discordUser.username,
+                    discordDiscriminator: discordUser.discriminator,
+                    discordAvatar: discordUser.avatar
+                })
+            }
+
+            token = jwt.sign({
+                id: user.id,
+                discordIdentifier: discordUser.id
+            }, process.env.JWT_SECRET, { expiresIn: data.expiresIn });
+        })
+
+    return token
 }

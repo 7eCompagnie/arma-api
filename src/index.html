@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<a href="https://discord.com/api/oauth2/authorize?client_id=964847392543350835&redirect_uri=http%3A%2F%2Flocalhost%3A4000%2F&response_type=code&scope=identify">Login</a>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('code'))
+        fetch(`/users/sign-in`, {
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({code: urlParams.get('code')}),
+            method: 'POST'
+        }).then((data) => data.json())
+    .then((data) => console.log(data))
+</script>
+</body>
+</html>
