@@ -1,7 +1,8 @@
 import * as groupsService from "../services/groups.service.js"
 import {getProps} from "../utils/props.js";
-import {getOperation} from "./operations.controller.js";
 import * as operationsService from "../services/operations.service.js";
+import {getTeam} from "../services/teams.service.js";
+import {getOperation} from "../services/operations.service.js";
 
 export const getGroups = async (req, res) => {
     try {
@@ -79,6 +80,11 @@ export const createGroup = async (req, res) => {
         if (!req.body.name)
             return res.status(422).json({
                 message: "Mandatory fields are missing."
+            })
+
+        if (!await getOperation(req.params.id))
+            return res.status(404).json({
+                message: `No operation found with id ${req.params.id}.`
             })
 
         const data = getProps(req.body, 'name', 'radio', 'vehicle')

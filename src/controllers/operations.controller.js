@@ -3,6 +3,7 @@ import {getProps} from "../utils/props.js";
 import slugify from "slugify";
 import {deleteFile} from "../utils/files.js";
 import {getCampaign} from "../services/campaigns.service.js";
+import {getTeam} from "../services/teams.service.js";
 
 export const getOperations = async (req, res) => {
     try {
@@ -117,6 +118,11 @@ export const createOperation = async (req, res) => {
             !req.file)
             return res.status(422).json({
                 message: "Mandatory fields are missing."
+            })
+
+        if (!await getCampaign(req.params.id))
+            return res.status(404).json({
+                message: `No campaign found with id ${req.params.id}.`
             })
 
         const slug = slugify(req.body.name, {lower: true})

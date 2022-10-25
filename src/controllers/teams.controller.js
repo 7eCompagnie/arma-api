@@ -1,6 +1,7 @@
 import * as teamsService from "../services/teams.service.js"
 import {getProps} from "../utils/props.js";
 import * as groupsService from "../services/groups.service.js";
+import {getGroup} from "../services/groups.service.js";
 
 export const getTeams = async (req, res) => {
     try {
@@ -78,6 +79,11 @@ export const createTeam = async (req, res) => {
         if (!req.body.name)
             return res.status(422).json({
                 message: "Mandatory fields are missing."
+            })
+
+        if (!await getGroup(req.params.id))
+            return res.status(404).json({
+                message: `No group found with id ${req.params.id}.`
             })
 
         const data = getProps(req.body, 'name')

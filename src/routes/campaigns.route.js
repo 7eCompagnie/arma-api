@@ -40,6 +40,6 @@ router.post('/:id', uploadCampaign.single("image"), updateCampaign)
 router.delete('/:id', deleteCampaign)
 
 router.get('/:id/operations/', getOperationsOfCampaign)
-router.post('/:campaignId/operations', uploadOperation.single("image"), createOperation)
+router.post('/:id/operations', uploadOperation.single("image"), createOperation)
 
 export default router

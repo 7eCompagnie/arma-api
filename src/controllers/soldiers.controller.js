@@ -3,6 +3,7 @@ import {getProps} from "../utils/props.js";
 import * as teamsService from "../services/teams.service.js";
 import {getUserById} from "../services/users.service.js";
 import {getTraining} from "../services/trainings.service.js";
+import {getTeam} from "../services/teams.service.js";
 
 export const getSoldiers = async (req, res) => {
     try {
@@ -81,6 +82,11 @@ export const createSoldier = async (req, res) => {
             !req.body.trainingId)
             return res.status(422).json({
                 message: "Mandatory fields are missing."
+            })
+
+        if (!await getTeam(req.params.id))
+            return res.status(404).json({
+                message: `No team found with id ${req.params.id}.`
             })
 
         const data = getProps(req.body, 'name', 'trainingId')
