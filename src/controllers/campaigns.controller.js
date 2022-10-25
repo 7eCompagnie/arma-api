@@ -98,64 +98,32 @@ export const createCampaign = async (req, res) => {
 
 export const updateCampaign = async (req, res) => {
     try {
-        let campaign = {}
+        let campaign = await campaignsService.getCampaign(req.params.id)
 
-        if (req.query.type === "slug") {
-            campaign = await campaignsService.getCampaignBySlug(req.params.id)
+        if (!campaign)
+            return res.status(404).json({
+                message: `No campaign found with id ${req.params.id}.`
+            })
 
-            if (!campaign)
-                return res.status(404).json({
-                    message: `No campaign found with slug ${req.params.id}.`
+        const data = getProps(req.body, 'name', 'summary')
+
+        if (req.body.name != null) {
+            const slug = slugify(req.body.name, {lower: true})
+
+            if (await campaignsService.getCampaignBySlug(slug))
+                return res.status(409).json({
+                    message: `Campaign ${req.body.name} already exists.`
                 })
 
-            const data = getProps(req.body, 'name', 'summary')
-
-            if (req.body.name != null) {
-                const slug = slugify(req.body.name, {lower: true})
-
-                if (await campaignsService.getCampaignBySlug(slug))
-                    return res.status(409).json({
-                        message: `Campaign ${req.body.name} already exists.`
-                    })
-
-                data.slug = slug
-            }
-
-            if (req.file != null) {
-                deleteFile(campaign.image)
-                data.image = req.file.path
-            }
-
-            return res.status(200).json(await campaignsService.updateCampaignBySlug(req.params.id, data))
-        } else {
-            campaign = await campaignsService.getCampaign(req.params.id)
-            if (!campaign)
-                return res.status(404).json({
-                    message: `No campaign found with id ${req.params.id}.`
-                })
-
-            campaign = await campaignsService.getCampaign(req.params.id)
-
-            const data = getProps(req.body, 'name', 'summary')
-
-            if (req.body.name != null) {
-                const slug = slugify(req.body.name, {lower: true})
-
-                if (await campaignsService.getCampaignBySlug(slug))
-                    return res.status(409).json({
-                        message: `Campaign ${req.body.name} already exists.`
-                    })
-
-                data.slug = slug
-            }
-
-            if (req.file != null) {
-                deleteFile(campaign.image)
-                data.image = req.file.path
-            }
-
-            return res.status(200).json(await campaignsService.updateCampaign(req.params.id, data))
+            data.slug = slug
         }
+
+        if (req.file != null) {
+            deleteFile(campaign.image)
+            data.image = req.file.path
+        }
+
+        return res.status(200).json(await campaignsService.updateCampaign(req.params.id, data))
     } catch (e) {
         console.error(e)
 
@@ -167,26 +135,14 @@ export const updateCampaign = async (req, res) => {
 
 export const deleteCampaign = async (req, res) => {
     try {
-        let campaign = {}
-        if (req.query.type === "slug") {
-            campaign = await campaignsService.getCampaignBySlug(req.params.id)
+        let campaign = await campaignsService.getCampaign(req.params.id)
 
-            if (!campaign)
-                return res.status(404).json({
-                    message: `No campaign found with slug ${req.params.id}.`
-                })
+        if (!campaign)
+            return res.status(404).json({
+                message: `No campaign found with id ${req.params.id}.`
+            })
 
-            return res.status(200).json(await campaignsService.deleteCampaignBySlug(req.params.id))
-        } else {
-            campaign = await campaignsService.getCampaign(req.params.id)
-
-            if (!campaign)
-                return res.status(404).json({
-                    message: `No campaign found with id ${req.params.id}.`
-                })
-
-            return res.status(200).json(await campaignsService.deleteCampaign(req.params.id))
-        }
+        return res.status(200).json(await campaignsService.deleteCampaign(req.params.id))
     } catch (e) {
         console.error(e)
 

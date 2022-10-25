@@ -1,4 +1,5 @@
 import prisma from "../config/prisma.js";
+import {deleteOperation, getOperationsOfCampaign} from "./operations.service.js";
 
 export const getCampaigns = async (pagination, filters, sort) => {
     if (pagination.limit === -1 && pagination.skip === -1) {
@@ -54,41 +55,15 @@ export const updateCampaign = async (id, data) => (
     })
 )
 
-export const updateCampaignBySlug = async (slug, data) => (
-    await prisma.campaign.update({
-        where: {
-            slug: slug
-        },
-        data: data
-    })
-)
-
 export const deleteCampaign = async (id) => {
-    await prisma.operation.deleteMany({
-        where: {
-            campaignId: id
-        }
-    })
+    let operations = await getOperationsOfCampaign(id)
+
+    for (let operation in operations)
+        await deleteOperation(operations[operation].id)
 
     return prisma.campaign.delete({
         where: {
             id: id
-        }
-    });
-}
-
-export const deleteCampaignBySlug = async (slug) => {
-    await prisma.operation.deleteMany({
-        where: {
-            campaign: {
-                slug: slug
-            }
-        }
-    })
-
-    return prisma.campaign.delete({
-        where: {
-            slug: slug
         }
     });
 }
