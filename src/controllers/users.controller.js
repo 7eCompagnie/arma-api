@@ -153,14 +153,23 @@ export const deleteUser = async (req, res) => {
 }
 
 export const signIn = async (req, res) => {
-    if (!req.body.code)
-        return res.status(422).json({
-            message: "Mandatory fields are missing."
-        })
+    try {
+        if (!req.body.code)
+            return res.status(422).json({
+                message: "Mandatory fields are missing."
+            })
 
-    res.status(200).json({
-        token: await getDiscordToken(req.body.code)
-    });
+        res.status(200).json({
+            token: await getDiscordToken(req.body.code)
+        });
+    } catch (e) {
+        console.error(e)
+
+        return res.status(500).json({
+            message: e.message
+        })
+    }
+
 }
 
 const getDiscordToken = async (code) => {
