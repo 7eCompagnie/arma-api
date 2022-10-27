@@ -9,10 +9,14 @@ import operationsRoute from "./routes/operations.route.js";
 import groupsRoute from "./routes/groups.route.js";
 import teamsRoute from "./routes/teams.route.js";
 import soldiersRoute from "./routes/soldiers.route.js";
+import cors from "cors";
 
 const app = express()
 const PORT = process.env.SERVER_PORT || 3000
 
+app.use(cors({
+    origin: process.env.CLIENT_URL
+}))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static('uploads'));
