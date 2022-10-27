@@ -4,6 +4,7 @@ import 'dotenv/config'
 import axios from "axios";
 import {getUserByDiscordIdentifier} from "../services/users.service.js";
 import jwt from "jsonwebtoken";
+import {extractBearerToken} from "../middlewares/auth.middleware.js";
 
 export const getUsers = async (req, res) => {
     try {
@@ -223,4 +224,12 @@ const getDiscordUser = async (data) => {
         })
 
     return token
+}
+
+export const getUserFromToken = async (req, res) => {
+    const token = req.headers.authorization && extractBearerToken(req.headers.authorization)
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
+
+    console.log(decodedToken)
+    return res.status(200).json(await usersService.getUserById(decodedToken.id))
 }
