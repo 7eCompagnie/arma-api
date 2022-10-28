@@ -224,14 +224,16 @@ const getDiscordUser = async (data) => {
                         discordIdentifier: discordUser.id,
                         discordUsername: discordUser.username,
                         discordDiscriminator: discordUser.discriminator,
-                        discordAvatar: discordUser.avatar
+                        discordAvatar: discordUser.avatar,
+                        discordToken: data.token
                     })
                 } else {
                     user = await usersService.updateUserByDiscordIdentifier(discordUser.id, {
                         discordIdentifier: discordUser.id,
                         discordUsername: discordUser.username,
                         discordDiscriminator: discordUser.discriminator,
-                        discordAvatar: discordUser.avatar
+                        discordAvatar: discordUser.avatar,
+                        discordToken: data.token
                     })
                 }
 
