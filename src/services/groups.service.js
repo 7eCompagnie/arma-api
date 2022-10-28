@@ -1,6 +1,10 @@
 import prisma from "../config/prisma.js";
 import {deleteTeam, getTeamsOfGroup} from "./teams.service.js";
 
+export const getCount = async () => {
+    return prisma.group.count();
+}
+
 export const getGroups = async (pagination, filters, sort) => {
     if (pagination.limit === -1 && pagination.skip === -1) {
         return prisma.group.findMany({

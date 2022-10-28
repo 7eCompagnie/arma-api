@@ -1,6 +1,10 @@
 import prisma from "../config/prisma.js";
 import {deleteGroup, getGroupsOfOperation} from "./groups.service.js";
 
+export const getCount = async () => {
+    return prisma.operation.count();
+}
+
 export const getOperations = async (pagination, filters, sort) => {
     if (pagination.limit === -1 && pagination.skip === -1) {
         return prisma.operation.findMany({

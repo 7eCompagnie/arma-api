@@ -2,6 +2,7 @@ import * as campaignsService from "../services/campaigns.service.js"
 import {getProps} from "../utils/props.js";
 import slugify from "slugify";
 import {deleteFile} from "../utils/files.js";
+import * as usersService from "../services/users.service.js";
 
 export const getCampaigns = async (req, res) => {
     try {
@@ -123,7 +124,7 @@ export const updateCampaign = async (req, res) => {
             data.image = req.file.path
         }
 
-        return res.status(200).json(await campaignsService.updateCampaign(req.params.id, data))
+        return res.status(200).setHeader('X-Total-Count', await usersService.getCount()).json(await campaignsService.updateCampaign(req.params.id, data))
     } catch (e) {
         console.error(e)
 

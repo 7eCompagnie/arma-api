@@ -3,6 +3,7 @@ import {getProps} from "../utils/props.js";
 import * as operationsService from "../services/operations.service.js";
 import {getTeam} from "../services/teams.service.js";
 import {getOperation} from "../services/operations.service.js";
+import * as usersService from "../services/users.service.js";
 
 export const getGroups = async (req, res) => {
     try {
@@ -31,7 +32,7 @@ export const getGroups = async (req, res) => {
 
         const filters = getProps(req.query, "name")
 
-        return res.status(200).json(await groupsService.getGroups(pagination, filters, sort))
+        return res.status(200).setHeader('X-Total-Count', await usersService.getCount()).json(await groupsService.getGroups(pagination, filters, sort))
     } catch (e) {
         console.error(e)
 

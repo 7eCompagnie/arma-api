@@ -1,6 +1,7 @@
 import * as trainingsService from "../services/trainings.service.js"
 import {getProps} from "../utils/props.js";
 import {deleteFile} from "../utils/files.js";
+import * as usersService from "../services/users.service.js";
 
 export const getTrainings = async (req, res) => {
     try {
@@ -39,7 +40,7 @@ export const getTrainings = async (req, res) => {
                 }
             }
 
-        return res.status(200).json(await trainingsService.getTrainings(pagination, filters, sort))
+        return res.status(200).setHeader('X-Total-Count', await usersService.getCount()).json(await trainingsService.getTrainings(pagination, filters, sort))
     } catch (e) {
         console.error(e)
 

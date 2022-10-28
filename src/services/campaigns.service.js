@@ -1,6 +1,10 @@
 import prisma from "../config/prisma.js";
 import {deleteOperation, getOperationsOfCampaign} from "./operations.service.js";
 
+export const getCount = async () => {
+    return prisma.campaign.count();
+}
+
 export const getCampaigns = async (pagination, filters, sort) => {
     if (pagination.limit === -1 && pagination.skip === -1) {
         return prisma.campaign.findMany({

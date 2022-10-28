@@ -1,5 +1,9 @@
 import prisma from "../config/prisma.js";
 
+export const getCount = async () => {
+    return prisma.trainer.count();
+}
+
 export const getTrainers = async (trainingId, pagination, filters, sort) => {
     if (pagination.limit === -1 && pagination.skip === -1) {
         return prisma.trainer.findMany({

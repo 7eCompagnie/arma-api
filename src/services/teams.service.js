@@ -1,6 +1,10 @@
 import prisma from "../config/prisma.js";
 import {deleteSoldier, getSoldiersOfTeam} from "./soldiers.service.js";
 
+export const getCount = async () => {
+    return prisma.team.count();
+}
+
 export const getTeams = async (pagination, filters, sort) => {
     if (pagination.limit === -1 && pagination.skip === -1) {
         return prisma.team.findMany({

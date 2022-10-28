@@ -4,6 +4,7 @@ import slugify from "slugify";
 import {deleteFile} from "../utils/files.js";
 import {getCampaign} from "../services/campaigns.service.js";
 import {getTeam} from "../services/teams.service.js";
+import * as usersService from "../services/users.service.js";
 
 export const getOperations = async (req, res) => {
     try {
@@ -32,7 +33,7 @@ export const getOperations = async (req, res) => {
 
         const filters = getProps(req.query, "name")
 
-        return res.status(200).json(await operationsService.getOperations(pagination, filters, sort))
+        return res.status(200).setHeader('X-Total-Count', await usersService.getCount()).json(await operationsService.getOperations(pagination, filters, sort))
     } catch (e) {
         console.error(e)
 

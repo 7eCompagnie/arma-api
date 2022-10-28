@@ -33,7 +33,7 @@ export const getUsers = async (req, res) => {
 
         const filters = getProps(req.query, "discordUsername", "role")
 
-        return res.status(200).json(await usersService.getUsers(pagination, filters, sort))
+        return res.status(200).setHeader('X-Total-Count', await usersService.getCount()).json(await usersService.getUsers(pagination, filters, sort))
     } catch (e) {
         console.error(e)
 
