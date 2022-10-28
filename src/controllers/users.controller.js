@@ -153,86 +153,98 @@ export const deleteUser = async (req, res) => {
 }
 
 export const signIn = async (req, res) => {
+    let token
+
     try {
         if (!req.body.code)
             return res.status(422).json({
                 message: "Mandatory fields are missing."
             })
 
+        token = await getDiscordToken(req.body.code)
+
         res.status(200).json({
-            token: await getDiscordToken(req.body.code)
+            token: token
         });
     } catch (e) {
         console.error(e)
 
         return res.status(500).json({
-            message: e.message
+            message: e.message,
+            token: token
         })
     }
-
 }
 
 const getDiscordToken = async (code) => {
-    const body = new URLSearchParams();
+    try {
+        const body = new URLSearchParams();
 
-    body.append('client_id', process.env.DISCORD_CLIENT_ID);
-    body.append('client_secret', process.env.DISCORD_CLIENT_SECRET);
-    body.append('grant_type', 'authorization_code');
-    body.append('code', code);
-    body.append('redirect_uri', process.env.DISCORD_REDIRECT_URI);
+        body.append('client_id', process.env.DISCORD_CLIENT_ID);
+        body.append('client_secret', process.env.DISCORD_CLIENT_SECRET);
+        body.append('grant_type', 'authorization_code');
+        body.append('code', code);
+        body.append('redirect_uri', process.env.DISCORD_REDIRECT_URI);
 
-    let token
+        let token
 
-    await axios.post('https://discordapp.com/api/oauth2/token', body)
-        .then(async (response) => {
-            const data = {
-                token: response.data.access_token,
-                refreshToken: response.data.refresh_token,
-                tokenType: response.data.token_type,
-                expiresIn: response.data.expires_in
-            }
+        await axios.post('https://discordapp.com/api/oauth2/token', body)
+            .then(async (response) => {
+                const data = {
+                    token: response.data.access_token,
+                    refreshToken: response.data.refresh_token,
+                    tokenType: response.data.token_type,
+                    expiresIn: response.data.expires_in
+                }
 
-            token = await getDiscordUser(data)
-        })
+                token = await getDiscordUser(data)
+            })
 
-    return token
+        return token
+    } catch (e) {
+        return e.message
+    }
 }
 
 const getDiscordUser = async (data) => {
-    let token
+    try {
+        let token
 
-    await axios.get('https://discordapp.com/api/users/@me', {
-        headers: {
-            Authorization: `Bearer ${data.token}`
-        }
-    })
-        .then(async (response) => {
-            const discordUser = response.data;
-            let user
-
-            if (!await getUserByDiscordIdentifier(discordUser.id)) {
-                user = await usersService.createUser({
-                    discordIdentifier: discordUser.id,
-                    discordUsername: discordUser.username,
-                    discordDiscriminator: discordUser.discriminator,
-                    discordAvatar: discordUser.avatar
-                })
-            } else {
-                user = await usersService.updateUserByDiscordIdentifier(discordUser.id, {
-                    discordIdentifier: discordUser.id,
-                    discordUsername: discordUser.username,
-                    discordDiscriminator: discordUser.discriminator,
-                    discordAvatar: discordUser.avatar
-                })
+        await axios.get('https://discordapp.com/api/users/@me', {
+            headers: {
+                Authorization: `Bearer ${data.token}`
             }
-
-            token = jwt.sign({
-                id: user.id,
-                discordIdentifier: discordUser.id
-            }, process.env.JWT_SECRET, { expiresIn: data.expiresIn });
         })
+            .then(async (response) => {
+                const discordUser = response.data;
+                let user
 
-    return token
+                if (!await getUserByDiscordIdentifier(discordUser.id)) {
+                    user = await usersService.createUser({
+                        discordIdentifier: discordUser.id,
+                        discordUsername: discordUser.username,
+                        discordDiscriminator: discordUser.discriminator,
+                        discordAvatar: discordUser.avatar
+                    })
+                } else {
+                    user = await usersService.updateUserByDiscordIdentifier(discordUser.id, {
+                        discordIdentifier: discordUser.id,
+                        discordUsername: discordUser.username,
+                        discordDiscriminator: discordUser.discriminator,
+                        discordAvatar: discordUser.avatar
+                    })
+                }
+
+                token = jwt.sign({
+                    id: user.id,
+                    discordIdentifier: discordUser.id
+                }, process.env.JWT_SECRET, { expiresIn: data.expiresIn });
+            })
+
+        return token
+    } catch (e) {
+        return e.message
+    }
 }
 
 export const getUserFromToken = async (req, res) => {
