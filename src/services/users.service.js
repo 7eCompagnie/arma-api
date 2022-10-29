@@ -37,6 +37,9 @@ export const getUserById = async (id) => (
     await prisma.user.findUnique({
         where: {
             id: id
+        },
+        include: {
+            trainings: true
         }
     })
 )
@@ -45,6 +48,9 @@ export const getUserByDiscordIdentifier = async (discordIdentifier) => (
     await prisma.user.findUnique({
         where: {
             discordIdentifier: discordIdentifier
+        },
+        include: {
+            trainings: true
         }
     })
 )

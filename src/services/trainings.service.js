@@ -16,7 +16,10 @@ export const getTrainings = async (pagination, filters, sort) => {
                 },
                 trainers: filters.user
             },
-            orderBy: sort
+            orderBy: sort,
+            include: {
+                trainers: true
+            }
         })
     } else
         return prisma.training.findMany({
@@ -31,7 +34,10 @@ export const getTrainings = async (pagination, filters, sort) => {
                 },
                 trainers: filters.user
             },
-            orderBy: sort
+            orderBy: sort,
+            include: {
+                trainers: true
+            }
         })
 }
 
