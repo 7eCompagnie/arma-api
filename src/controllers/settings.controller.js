@@ -69,7 +69,7 @@ export const createSetting = async (req, res) => {
                 message: `Setting ${req.body.name} already exists.`
             })
 
-        const data = getProps(req.body, 'name', 'value')
+        const data = getProps(req.body, 'name', 'value', 'description')
 
         return res.status(201).json(await settingsService.createSetting(data))
     } catch (e) {
@@ -88,7 +88,7 @@ export const updateSetting = async (req, res) => {
                 message: `No setting found with id ${req.params.name}.`
             })
 
-        const data = getProps(req.body, 'value')
+        const data = getProps(req.body, 'value', 'description')
 
         return res.status(200).json(await settingsService.updateSetting(req.params.name, data))
     } catch (e) {
