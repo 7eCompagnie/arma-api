@@ -9,6 +9,7 @@ import operationsRoute from "./routes/operations.route.js";
 import groupsRoute from "./routes/groups.route.js";
 import teamsRoute from "./routes/teams.route.js";
 import soldiersRoute from "./routes/soldiers.route.js";
+import imagesRoute from "./routes/images.route.js";
 import cors from "cors";
 
 const app = express()
@@ -30,5 +31,6 @@ app.use('/operations', operationsRoute)
 app.use('/groups', groupsRoute)
 app.use('/teams', teamsRoute)
 app.use('/soldiers', soldiersRoute)
+app.use('/images', imagesRoute)
 
 app.listen(PORT, () => console.log(`[API] => Running on port ${PORT}`))

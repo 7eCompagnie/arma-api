@@ -5,6 +5,7 @@ import crypto from "crypto";
 import path from "path";
 import {getGroupsOfOperation, createGroup} from "../controllers/groups.controller.js";
 import {isSigned} from "../middlewares/auth.middleware.js";
+import {createImage, getImagesOfOperation} from "../controllers/images.controller.js";
 
 const router = express.Router()
 
@@ -19,7 +20,20 @@ const storage = multer.diskStorage({
     }
 })
 
+const imageStorage = multer.diskStorage({
+    destination: 'uploads/operations/images',
+    filename: function (req, file, cb) {
+        crypto.pseudoRandomBytes(16, function (err, raw) {
+            if (err) return cb(err)
+
+            cb(null, raw.toString('hex') + path.extname(file.originalname))
+        })
+    }
+})
+
 const uploadOperation = multer({storage: storage});
+
+const uploadImage = multer({storage: imageStorage});
 
 router.get('/', isSigned, getOperations)
 router.get('/:id', isSigned, getOperation)
@@ -28,5 +42,8 @@ router.delete('/:id', isSigned, deleteOperation)
 
 router.get('/:id/groups/', isSigned, getGroupsOfOperation)
 router.post('/:id/groups/', isSigned, createGroup)
+
+router.get('/:id/images/', isSigned, getImagesOfOperation)
+router.post('/:id/images/', isSigned, uploadImage.single('image'), createImage)
 
 export default router

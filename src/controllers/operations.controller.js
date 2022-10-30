@@ -3,7 +3,6 @@ import {getProps} from "../utils/props.js";
 import slugify from "slugify";
 import {deleteFile} from "../utils/files.js";
 import {getCampaign} from "../services/campaigns.service.js";
-import {getTeam} from "../services/teams.service.js";
 import * as usersService from "../services/users.service.js";
 
 export const getOperations = async (req, res) => {
@@ -137,7 +136,7 @@ export const createOperation = async (req, res) => {
         data.image = req.file.path
         data.slug = slug
         data.date = new Date(req.body.date)
-        data.campaignId = req.params.campaignId
+        data.campaignId = req.params.id
 
         return res.status(201).json(await operationsService.createOperation(data))
     } catch (e) {
