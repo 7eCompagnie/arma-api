@@ -1,10 +1,7 @@
 import * as imagesService from "../services/images.service.js"
 import {getProps} from "../utils/props.js";
 import * as operationsService from "../services/operations.service.js";
-import {getUserById} from "../services/users.service.js";
-import {getTraining} from "../services/trainings.service.js";
 import {getOperation} from "../services/operations.service.js";
-import * as usersService from "../services/users.service.js";
 
 export const getImages = async (req, res) => {
     try {
@@ -31,7 +28,7 @@ export const getImages = async (req, res) => {
             sort.push(obj)
         }
 
-        return res.status(200).setHeader('X-Total-Count', await usersService.getCount()).json(await imagesService.getImages(pagination, sort))
+        return res.status(200).setHeader('X-Total-Count', await imagesService.getCount()).json(await imagesService.getImages(pagination, sort))
     } catch (e) {
         console.error(e)
 

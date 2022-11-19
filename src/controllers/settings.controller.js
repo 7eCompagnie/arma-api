@@ -1,6 +1,5 @@
 import * as settingsService from "../services/settings.service.js"
 import {getProps} from "../utils/props.js";
-import * as usersService from "../services/users.service.js";
 
 export const getSettings = async (req, res) => {
     try {
@@ -29,7 +28,7 @@ export const getSettings = async (req, res) => {
 
         const filters = getProps(req.query, "name")
 
-        return res.status(200).setHeader('X-Total-Count', await usersService.getCount()).json(await settingsService.getSettings(pagination, filters, sort))
+        return res.status(200).setHeader('X-Total-Count', await settingsService.getCount()).json(await settingsService.getSettings(pagination, filters, sort))
     } catch (e) {
         console.error(e)
 

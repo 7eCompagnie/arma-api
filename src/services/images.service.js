@@ -10,6 +10,8 @@ export const getImages = async (pagination, sort) => {
             orderBy: sort,
             include: {
                 user: true,
+                operation: true,
+                likes: true
             }
         })
     } else
@@ -19,6 +21,8 @@ export const getImages = async (pagination, sort) => {
             orderBy: sort,
             include: {
                 user: true,
+                operation: true,
+                likes: true
             }
         })
 }

@@ -2,7 +2,6 @@ import * as teamsService from "../services/teams.service.js"
 import {getProps} from "../utils/props.js";
 import * as groupsService from "../services/groups.service.js";
 import {getGroup} from "../services/groups.service.js";
-import * as usersService from "../services/users.service.js";
 
 export const getTeams = async (req, res) => {
     try {
@@ -31,7 +30,7 @@ export const getTeams = async (req, res) => {
 
         const filters = getProps(req.query, "name")
 
-        return res.status(200).setHeader('X-Total-Count', await usersService.getCount()).json(await teamsService.getTeams(pagination, filters, sort))
+        return res.status(200).setHeader('X-Total-Count', await teamsService.getCount()).json(await teamsService.getTeams(pagination, filters, sort))
     } catch (e) {
         console.error(e)
 
