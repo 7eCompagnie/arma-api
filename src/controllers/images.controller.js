@@ -2,6 +2,8 @@ import * as imagesService from "../services/images.service.js"
 import {getProps} from "../utils/props.js";
 import * as operationsService from "../services/operations.service.js";
 import {getOperation} from "../services/operations.service.js";
+import jwt from "jsonwebtoken";
+import {extractBearerToken} from "../middlewares/auth.middleware.js";
 
 export const getImages = async (req, res) => {
     try {
@@ -74,8 +76,7 @@ export const getImage = async (req, res) => {
 
 export const createImage = async (req, res) => {
     try {
-        if (!req.body.userId ||
-            !req.file)
+        if (!req.file)
             return res.status(422).json({
                 message: "Mandatory fields are missing."
             })
@@ -85,10 +86,18 @@ export const createImage = async (req, res) => {
                 message: `No operation found with id ${req.params.id}.`
             })
 
-        const data = getProps(req.body, 'userId', 'title', 'description')
+        const token = req.headers.authorization && extractBearerToken(req.headers.authorization)
+        let userId = ""
+
+        jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
+            userId = decodedToken.id
+        })
+
+        const data = getProps(req.body, 'title', 'description')
         data.operationId = req.params.id
         data.image = req.file.path
         data.showOnHome = req.body.showOnHome === 'true'
+        data.userId = userId
 
         return res.status(201).json(await imagesService.createImage(data))
     } catch (e) {

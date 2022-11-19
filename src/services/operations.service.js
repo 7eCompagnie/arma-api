@@ -13,6 +13,9 @@ export const getOperations = async (pagination, filters, sort) => {
                     contains: filters.name
                 },
             },
+            include: {
+                campaign: true
+            },
             orderBy: sort
         })
     } else
@@ -23,6 +26,9 @@ export const getOperations = async (pagination, filters, sort) => {
                 name: {
                     contains: filters.name
                 }
+            },
+            include: {
+                campaign: true
             },
             orderBy: sort
         })
