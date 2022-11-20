@@ -55,6 +55,12 @@ export const createImage = async (data) => (
 )
 
 export const deleteImage = async (id) => {
+    await prisma.imageLike.deleteMany({
+        where: {
+            imageId: id
+        }
+    })
+
     return prisma.image.delete({
         where: {
             id: id
