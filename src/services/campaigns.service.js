@@ -1,5 +1,6 @@
 import prisma from "../config/prisma.js";
 import {deleteOperation, getOperationsOfCampaign} from "./operations.service.js";
+import {deleteFile} from "../utils/files.js";
 
 export const getCount = async () => {
     return prisma.campaign.count();
@@ -60,6 +61,14 @@ export const updateCampaign = async (id, data) => (
 )
 
 export const deleteCampaign = async (id) => {
+    let campaign = await getCampaign(id)
+
+    try {
+        deleteFile(campaign.image)
+    } catch (e) {
+        console.error(e.message)
+    }
+
     let operations = await getOperationsOfCampaign(id)
 
     for (let operation in operations)

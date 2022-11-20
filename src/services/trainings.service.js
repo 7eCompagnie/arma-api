@@ -1,4 +1,5 @@
 import prisma from "../config/prisma.js";
+import {deleteFile} from "../utils/files.js";
 
 export const getCount = async () => {
     return prisma.training.count();
@@ -65,6 +66,14 @@ export const updateTraining = async (id, data) => (
 )
 
 export const deleteTraining = async (id) => {
+    let training = await getTraining(id)
+
+    try {
+        deleteFile(training.image)
+    } catch (e) {
+        console.error(e.message)
+    }
+
     await prisma.trainer.deleteMany({
         where: {
             training: {

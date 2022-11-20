@@ -1,4 +1,5 @@
 import prisma from "../config/prisma.js";
+import {deleteFile} from "../utils/files.js";
 
 export const getCount = async () => {
     return prisma.image.count();
@@ -55,6 +56,14 @@ export const createImage = async (data) => (
 )
 
 export const deleteImage = async (id) => {
+    let image = await getImage(id)
+
+    try {
+        deleteFile(image.image)
+    } catch (e) {
+        console.error(e.message)
+    }
+
     await prisma.imageLike.deleteMany({
         where: {
             imageId: id

@@ -186,14 +186,10 @@ export const updateOperation = async (req, res) => {
 
 export const deleteOperation = async (req, res) => {
     try {
-        let operation = await operationsService.getOperation(req.params.id)
-
-        if (!operation)
+        if (!await operationsService.getOperation(req.params.id))
             return res.status(404).json({
                 message: `No operation found with id ${req.params.id}.`
             })
-
-        deleteFile(operation.image)
 
         return res.status(200).json(await operationsService.deleteOperation(req.params.id))
     } catch (e) {

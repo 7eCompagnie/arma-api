@@ -1,5 +1,7 @@
 import prisma from "../config/prisma.js";
 import {deleteGroup, getGroupsOfOperation} from "./groups.service.js";
+import {deleteImage, getImagesOfOperation} from "./images.service.js";
+import {deleteFile} from "../utils/files.js";
 
 export const getCount = async () => {
     return prisma.operation.count();
@@ -74,10 +76,23 @@ export const updateOperation = async (id, data) => (
 )
 
 export const deleteOperation = async (id) => {
+    let operation = await getOperation(id)
+
+    try {
+        deleteFile(operation.image)
+    } catch (e) {
+        console.error(e.message)
+    }
+
     let groups = await getGroupsOfOperation(id)
 
     for (let group in groups)
         await deleteGroup(groups[group].id)
+
+    let images = await getImagesOfOperation(id)
+
+    for (let image in images)
+        await deleteImage(images[image].id)
 
     return prisma.operation.delete({
         where: {

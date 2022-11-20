@@ -135,9 +135,7 @@ export const updateCampaign = async (req, res) => {
 
 export const deleteCampaign = async (req, res) => {
     try {
-        let campaign = await campaignsService.getCampaign(req.params.id)
-
-        if (!campaign)
+        if (!await campaignsService.getCampaign(req.params.id))
             return res.status(404).json({
                 message: `No campaign found with id ${req.params.id}.`
             })

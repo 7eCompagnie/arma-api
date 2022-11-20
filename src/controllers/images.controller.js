@@ -4,7 +4,6 @@ import * as operationsService from "../services/operations.service.js";
 import {getOperation} from "../services/operations.service.js";
 import jwt from "jsonwebtoken";
 import {extractBearerToken} from "../middlewares/auth.middleware.js";
-import {deleteFile} from "../utils/files.js";
 
 export const getImages = async (req, res) => {
     try {
@@ -112,14 +111,10 @@ export const createImage = async (req, res) => {
 
 export const deleteImage = async (req, res) => {
     try {
-        const image = await imagesService.getImage(req.params.id)
-
-        if (!image)
+        if (!await imagesService.getImage(req.params.id))
             return res.status(404).json({
                 message: `No image found with id ${req.params.id}.`
             })
-
-        deleteFile(image.image)
 
         return res.status(200).json(await imagesService.deleteImage(req.params.id))
     } catch (e) {

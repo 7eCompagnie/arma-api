@@ -126,14 +126,10 @@ export const updateTraining = async (req, res) => {
 
 export const deleteTraining = async (req, res) => {
     try {
-        const training = await trainingsService.getTraining(req.params.id)
-
-        if (!training)
+        if (!await trainingsService.getTraining(req.params.id))
             return res.status(404).json({
                 message: `No training found with id ${req.params.id}.`
             })
-
-        deleteFile(training.image)
 
         return res.status(200).json(await trainingsService.deleteTraining(req.params.id))
     } catch (e) {
