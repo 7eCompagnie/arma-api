@@ -21,7 +21,7 @@ const storage = multer.diskStorage({
 })
 
 const imageStorage = multer.diskStorage({
-    destination: 'uploads/operations/images',
+    destination: 'uploads/gallery',
     filename: function (req, file, cb) {
         crypto.pseudoRandomBytes(16, function (err, raw) {
             if (err) return cb(err)
